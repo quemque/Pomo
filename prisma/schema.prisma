@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  createdAt     DateTime  @default(now())
+  
+  // Связи
+  ownedRooms    Room[]           @relation("RoomOwner")
+  participations RoomParticipant[]
+  focusSessions  FocusSession[]
+  focusLogs      FocusLog[]
+  achievements   UserAchievement[]
+}
+
+model Room {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isPublic    Boolean  @default(true)
+  focusDuration   Int  @default(25)  // минуты
+  breakDuration   Int  @default(5)   // минуты
+  longBreakDuration Int @default(15) // минуты
+  sessionsBeforeLongBreak Int @default(4)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Связи
+  ownerId     String
+  owner       User     @relation("RoomOwner", fields: [ownerId], references: [id])
+  participants RoomParticipant[]
+  focusSessions FocusSession[]
+  
+  // Текущее состояние комнаты (для быстрого доступа без запроса к сессиям)
+  currentPhase      String   @default("IDLE") // IDLE, FOCUS, BREAK, LONG_BREAK
+  currentPhaseEndsAt DateTime?
+  currentSessionNumber Int @default(0)
+}
+
+model RoomParticipant {
+  id        String   @id @default(cuid())
+  joinedAt  DateTime @default(now())
+  leftAt    DateTime?
+  
+  // Связи
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, roomId]) // один пользователь — одно участие в комнате
+}
+
+model FocusSession {
+  id          String   @id @default(cuid())
+  startedAt   DateTime @default(now())
+  endedAt     DateTime?
+  phase       String   // FOCUS, BREAK, LONG_BREAK
+  duration    Int      // фактическая длительность в минутах
+  completed   Boolean  @default(false) // досидел до конца или вышел раньше
+  
+  // Связи
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  
+  // Детали по каждому участнику (если нужно)
+  logs        FocusLog[]
+}
+
+model FocusLog {
+  id          String   @id @default(cuid())
+  timestamp   DateTime @default(now())
+  event       String   // JOIN, LEAVE, PHASE_CHANGE, COMPLETE, ABORT
+  metadata    Json?    // доп. данные: { pageVisible: false, reason: "tab_switch" }
+  
+  // Связи
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId   String
+  session     FocusSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  code        String   @unique // "FIRST_POMO", "STREAK_7", "EARLY_BIRD"
+  name        String
+  description String
+  icon        String   // emoji или путь к SVG
+  condition   Json     // { type: "count", field: "totalPomos", value: 1 }
+  
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id          String   @id @default(cuid())
+  earnedAt    DateTime @default(now())
+  
+  // Связи
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, achievementId]) // одно достижение — один раз
+}
