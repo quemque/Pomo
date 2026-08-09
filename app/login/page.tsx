@@ -2,15 +2,43 @@ import { signIn } from '@/auth'
 
 export default function LoginPage() {
    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f5f0eb]">
-         <div className="w-full max-w-sm px-6">
-            <div className="text-center mb-12">
-               <div className="text-7xl mb-4">🍅</div>
-               <h1 className="text-4xl font-light tracking-wider text-[#4a3f3a]">
-                  pomo
+      <main className="fixed inset-0 bg-[#F5F0EB] flex items-center justify-center overflow-hidden">
+         <div
+            className="absolute top-1/3 left-1/3 w-[40rem] h-[40rem] bg-[#E8DDD4] rounded-full blur-[150px] opacity-40 pointer-events-none"
+            aria-hidden="true"
+         />
+         <div
+            className="absolute bottom-1/3 right-1/3 w-[35rem] h-[35rem] bg-[#DDD5CC] rounded-full blur-[130px] opacity-30 pointer-events-none"
+            aria-hidden="true"
+         />
+
+         <div className="absolute bottom-[-10vh] left-1/2 -translate-x-1/2 w-[70vw] md:w-[35vw] max-w-[500px] z-0 animate-float opacity-30 pointer-events-none">
+            <svg
+               viewBox="0 0 200 200"
+               className="w-full h-full"
+               aria-hidden="true"
+            >
+               <defs>
+                  <radialGradient id="loginTomato" cx="40%" cy="30%" r="65%">
+                     <stop offset="0%" stopColor="#FF8A8A" />
+                     <stop offset="40%" stopColor="#E53935" />
+                     <stop offset="100%" stopColor="#8B1818" />
+                  </radialGradient>
+               </defs>
+               <circle cx="100" cy="105" r="85" fill="url(#loginTomato)" />
+            </svg>
+         </div>
+
+         <div className="relative z-10 w-full max-w-sm px-6">
+            <div className="text-center mb-10">
+               <h1
+                  className="text-[15vw] md:text-[8vw] font-black text-white tracking-[-0.04em] leading-none select-none drop-shadow-2xl mb-4"
+                  style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+               >
+                  POMO
                </h1>
-               <p className="text-[#8a7e78] text-sm mt-2 font-light">
-                  focus together
+               <p className="text-[#8B7355]/50 text-sm tracking-[0.3em] uppercase font-light">
+                  Focus together
                </p>
             </div>
 
@@ -23,9 +51,24 @@ export default function LoginPage() {
                >
                   <button
                      type="submit"
-                     className="w-full px-4 py-4 bg-white hover:bg-[#faf7f4] text-[#4a3f3a] font-light rounded-sm transition-all duration-200 border border-[#e8e0d8] hover:border-[#cbbfb5] active:scale-[0.98] text-sm tracking-wide uppercase"
+                     className="w-full px-6 py-4 bg-white/60 hover:bg-white/90 backdrop-blur-sm 
+                              text-[#5D4037] font-medium rounded-2xl 
+                              border border-white/50 hover:border-white/90
+                              shadow-[0_4px_20px_rgba(139,115,85,0.08)] hover:shadow-[0_8px_30px_rgba(139,115,85,0.12)]
+                              transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0
+                              flex items-center justify-center gap-3"
                   >
-                     GitHub
+                     <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                     >
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                     </svg>
+                     <span className="tracking-widest uppercase text-sm">
+                        GitHub
+                     </span>
                   </button>
                </form>
 
@@ -37,34 +80,63 @@ export default function LoginPage() {
                >
                   <button
                      type="submit"
-                     className="w-full px-4 py-4 bg-white hover:bg-[#faf7f4] text-[#4a3f3a] font-light rounded-sm transition-all duration-200 border border-[#e8e0d8] hover:border-[#cbbfb5] active:scale-[0.98] text-sm tracking-wide uppercase"
+                     className="w-full px-6 py-4 bg-white/60 hover:bg-white/90 backdrop-blur-sm 
+                              text-[#5D4037] font-medium rounded-2xl 
+                              border border-white/50 hover:border-white/90
+                              shadow-[0_4px_20px_rgba(139,115,85,0.08)] hover:shadow-[0_8px_30px_rgba(139,115,85,0.12)]
+                              transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0
+                              flex items-center justify-center gap-3"
                   >
-                     Google
+                     <svg
+                        className="w-5 h-5"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                     >
+                        <path
+                           fill="#4285F4"
+                           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                        />
+                        <path
+                           fill="#34A853"
+                           d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        />
+                        <path
+                           fill="#FBBC05"
+                           d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                        />
+                        <path
+                           fill="#EA4335"
+                           d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                        />
+                     </svg>
+                     <span className="tracking-widest uppercase text-sm">
+                        Google
+                     </span>
                   </button>
                </form>
             </div>
 
             <div className="relative my-8">
                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#e8e0d8]"></div>
+                  <div className="w-full border-t border-[#8B7355]/10"></div>
                </div>
                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-[#f5f0eb] text-[#cbbfb5] text-xs tracking-widest uppercase">
+                  <span className="px-4 bg-[#F5F0EB] text-[#8B7355]/30 text-xs tracking-[0.2em] uppercase">
                      or
                   </span>
                </div>
             </div>
 
             <div className="text-center">
-               <button className="text-[#8a7e78] hover:text-[#4a3f3a] text-sm font-light transition-colors">
-                  continue as guest
+               <button className="text-[#8B7355]/40 hover:text-[#5D4037]/70 text-sm tracking-widest uppercase transition-colors duration-300 font-light">
+                  Continue as guest
                </button>
             </div>
 
-            <p className="text-center text-[#cbbfb5] text-[11px] font-light mt-10 tracking-wide">
-               by continuing you agree to our terms
+            <p className="text-center text-[#8B7355]/25 text-[11px] font-light mt-10 tracking-wide">
+               By continuing you agree to our terms
             </p>
          </div>
-      </div>
+      </main>
    )
 }

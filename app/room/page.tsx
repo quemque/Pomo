@@ -1,52 +1,68 @@
 'use client'
 
 import Footer from '@/components/layout/Footer'
-import { useState, useEffect, useCallback } from 'react'
+import { useTimerStore } from '../lib/timer-store'
+import { useState, useCallback } from 'react'
 
 export default function Room() {
-   const [time, setTime] = useState(25 * 60)
-   const [isRunning, setIsRunning] = useState(false)
-   const [phase, setPhase] = useState<'focus' | 'break'>('focus')
+   const {
+      timeLeft,
+      totalTime,
+      isRunning,
+      phase,
+      start,
+      pause,
+      resume,
+      stop,
+      setTimeLeft,
+      setTotalTime,
+      setPhase,
+   } = useTimerStore()
+
    const [focusDuration, setFocusDuration] = useState(25)
    const [breakDuration, setBreakDuration] = useState(5)
+   const [showSettings, setShowSettings] = useState(false)
    const [sessionsCompleted, setSessionsCompleted] = useState(0)
    const [todayCount, setTodayCount] = useState(0)
    const [weekCount, setWeekCount] = useState(0)
    const [streakCount, setStreakCount] = useState(0)
-   const [showSettings, setShowSettings] = useState(false)
 
    const circumference = 2 * Math.PI * 110
 
-   useEffect(() => {
-      if (!isRunning) return
+   const completePhase = useCallback(() => {
+      pause()
 
-      const interval = setInterval(() => {
-         setTime((prev) => {
-            if (prev <= 1) {
-               handleTimerComplete()
-               return 0
-            }
-            return prev - 1
-         })
-      }, 1000)
-
-      return () => clearInterval(interval)
-   }, [isRunning])
-
-   const handleTimerComplete = useCallback(() => {
-      setIsRunning(false)
       if (phase === 'focus') {
          setTodayCount((p) => p + 1)
          setWeekCount((p) => p + 1)
-         setSessionsCompleted((p) => p + 1)
+
+         const nextSessions = sessionsCompleted + 1
+         setSessionsCompleted(nextSessions)
+
+         if (nextSessions >= 4) {
+            setStreakCount((p) => p + 1)
+            setSessionsCompleted(0)
+         }
+
          setPhase('break')
-         setTime(breakDuration * 60)
+         setTimeLeft(breakDuration * 60)
+         setTotalTime(breakDuration * 60)
       } else {
          setStreakCount((p) => p + 1)
          setPhase('focus')
-         setTime(focusDuration * 60)
+         setTimeLeft(focusDuration * 60)
+         setTotalTime(focusDuration * 60)
       }
-   }, [phase, focusDuration, breakDuration])
+   }, [
+      phase,
+      pause,
+      setPhase,
+      setTimeLeft,
+      setTotalTime,
+      breakDuration,
+      focusDuration,
+      sessionsCompleted,
+   ])
 
    const formatTime = (seconds: number) => {
       const mins = Math.floor(seconds / 60)
@@ -54,33 +70,64 @@ export default function Room() {
       return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
    }
 
-   const toggleTimer = () => setIsRunning(!isRunning)
-
-   const resetTimer = () => {
-      setIsRunning(false)
-      setPhase('focus')
-      setTime(focusDuration * 60)
+   const toggleTimer = () => {
+      if (phase === 'idle') {
+         start(focusDuration * 60)
+      } else if (isRunning) {
+         pause()
+      } else {
+         resume()
+      }
    }
+
+   const resetTimer = () => stop()
 
    const adjustDuration = (type: 'focus' | 'break', delta: number) => {
       if (type === 'focus') {
          const newVal = Math.max(1, Math.min(60, focusDuration + delta))
          setFocusDuration(newVal)
-         if (phase === 'focus' && !isRunning) setTime(newVal * 60)
+         if ((phase === 'focus' || phase === 'idle') && !isRunning) {
+            setTimeLeft(newVal * 60)
+            setTotalTime(newVal * 60)
+         }
       } else {
          const newVal = Math.max(1, Math.min(30, breakDuration + delta))
          setBreakDuration(newVal)
-         if (phase === 'break' && !isRunning) setTime(newVal * 60)
+         if (phase === 'break' && !isRunning) {
+            setTimeLeft(newVal * 60)
+            setTotalTime(newVal * 60)
+         }
       }
    }
 
-   const totalTime = phase === 'focus' ? focusDuration * 60 : breakDuration * 60
-   const progress = totalTime > 0 ? (totalTime - time) / totalTime : 0
+   if (timeLeft === 0 && isRunning) {
+      completePhase()
+   }
+
+   const currentTotal =
+      totalTime || (phase === 'break' ? breakDuration * 60 : focusDuration * 60)
+   const progress =
+      currentTotal > 0 ? (currentTotal - timeLeft) / currentTotal : 0
    const strokeDashoffset = circumference - progress * circumference
 
-   const progressColor = phase === 'focus' ? '#b89088' : '#7a9a7a'
-   const badgeBg = phase === 'focus' ? '#e8d5d0' : '#d4e0d4'
-   const badgeText = phase === 'focus' ? '#b89088' : '#7a9a7a'
+   const progressColor = phase === 'break' ? '#7a9a7a' : '#b89088'
+   const badgeBg = phase === 'break' ? '#d4e0d4' : '#e8d5d0'
+   const badgeText = phase === 'break' ? '#7a9a7a' : '#b89088'
+
+   const buttonText = isRunning
+      ? phase === 'focus'
+         ? 'Pause focus'
+         : 'Pause break'
+      : phase === 'break'
+        ? 'Start break'
+        : 'Start focus'
+
+   const badgeLabel =
+      phase === 'idle'
+         ? 'Ready'
+         : phase === 'focus'
+           ? 'Focus time'
+           : 'Break time'
 
    return (
       <div className="min-h-screen bg-[#fdf8f3] flex flex-col font-['DM_Sans',sans-serif]">
@@ -98,7 +145,7 @@ export default function Room() {
                         className="w-1.5 h-1.5 rounded-full animate-pulse"
                         style={{ background: 'currentColor' }}
                      />
-                     {phase === 'focus' ? 'Focus time' : 'Break time'}
+                     {badgeLabel}
                   </span>
                </div>
 
@@ -131,7 +178,7 @@ export default function Room() {
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                      <div className="text-5xl font-light tracking-wider text-[#6b5b4f] tabular-nums">
-                        {formatTime(time)}
+                        {formatTime(timeLeft)}
                      </div>
                      <div className="text-[11px] text-[#a89a8e] tracking-[0.1em] uppercase mt-1.5">
                         minutes remaining
@@ -144,13 +191,7 @@ export default function Room() {
                      onClick={toggleTimer}
                      className="px-7 py-2.5 rounded-xl text-sm font-medium tracking-wide transition-all duration-200 bg-[#6b5b4f] text-[#fdf8f3] shadow-md hover:bg-[#8a7a6e] hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0"
                   >
-                     {isRunning
-                        ? phase === 'focus'
-                           ? 'Pause focus'
-                           : 'Pause break'
-                        : phase === 'focus'
-                          ? 'Start focus'
-                          : 'Start break'}
+                     {buttonText}
                   </button>
                   <button
                      onClick={resetTimer}

@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { SessionProvider } from 'next-auth/react'
 import './globals.css'
 import Header from '@/components/layout/Header'
+import { GlobalTicker } from './components/global-ticker'
+import { FloatingTimer } from './components/floating-timer'
 
 const geistSans = Geist({
    variable: '--font-geist-sans',
@@ -33,6 +35,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <SessionProvider>
                <Header />
                {children}
+               <GlobalTicker />
+               <FloatingTimer />
             </SessionProvider>
          </body>
       </html>
