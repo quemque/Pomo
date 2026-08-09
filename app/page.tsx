@@ -1,70 +1,52 @@
-import Image from 'next/image'
+import { BackgroundGlow } from '@/components/landing/BackgroundGlow'
+import TomatoSVG from '@/components/landing/TomatoSVG'
+import Link from 'next/link'
 
 export default function Home() {
    return (
-      <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-         <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-            <Image
-               className="dark:invert h-5 w-[100px]"
-               src="/next.svg"
-               alt="Next.js logo"
-               width={100}
-               height={20}
-               priority
-            />
-            <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-               <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-                  To get started, edit the{' '}
-                  <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-                     page.tsx
-                  </code>{' '}
-                  file.
-               </h1>
-               <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-                  Looking for a starting point or more instructions? Head over
-                  to{' '}
-                  <a
-                     href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                     className="font-medium text-zinc-950 dark:text-zinc-50"
-                  >
-                     Templates
-                  </a>{' '}
-                  or the{' '}
-                  <a
-                     href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                     className="font-medium text-zinc-950 dark:text-zinc-50"
-                  >
-                     Learning
-                  </a>{' '}
-                  center.
-               </p>
-            </div>
-            <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-               <a
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-                  href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                  target="_blank"
-                  rel="noopener noreferrer"
+      <main className="fixed inset-0 bg-[#F5F0EB] flex flex-col items-center justify-center overflow-hidden">
+         <BackgroundGlow />
+
+         <div className="absolute bottom-[-5vh] md:bottom-[-15vh] left-1/2 -translate-x-1/2 w-[90vw] md:w-[45vw] max-w-[600px] z-0 animate-float pointer-events-none">
+            <TomatoSVG />
+         </div>
+
+         <h1
+            className="relative z-10 text-center text-[28vw] md:text-[22vw] font-black text-white 
+               tracking-[-0.04em] leading-none select-none pointer-events-none drop-shadow-2xl"
+            style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+         >
+            POMO
+         </h1>
+
+         <div className="absolute bottom-12 md:bottom-20 left-1/2 -translate-x-1/2 z-20">
+            <Link
+               href="/room"
+               className="group relative flex items-center justify-center gap-3 px-8 py-4 
+                          bg-white/40 hover:bg-white/70 backdrop-blur-md 
+                          border border-white/50 hover:border-white/90 
+                          rounded-full shadow-[0_8px_32px_rgba(139,115,85,0.15)] 
+                          transition-all duration-500 ease-out 
+                          hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(229,57,53,0.2)]"
+            >
+               <span className="text-[#5D4037] font-bold tracking-[0.2em] uppercase text-sm">
+                  Room
+               </span>
+               <svg
+                  className="w-5 h-5 text-[#E53935] transform group-hover:translate-x-1.5 transition-transform duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                >
-                  <Image
-                     className="dark:invert h-[14px] w-4"
-                     src="/vercel.svg"
-                     alt="Vercel logomark"
-                     width={16}
-                     height={14}
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     strokeWidth={2.5}
+                     d="M14 5l7 7m0 0l-7 7m7-7H3"
                   />
-                  Deploy Now
-               </a>
-               <a
-                  className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-                  href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-               >
-                  Documentation
-               </a>
-            </div>
-         </main>
-      </div>
+               </svg>
+            </Link>
+         </div>
+      </main>
    )
 }

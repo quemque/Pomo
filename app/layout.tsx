@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { SessionProvider } from 'next-auth/react'
 import './globals.css'
+import Header from '@/components/layout/Header'
 
 const geistSans = Geist({
    variable: '--font-geist-sans',
@@ -14,7 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
    title: 'Pomo',
-   description: 'Pomodoro timer',
+   description: 'Social pomodoro timer. Focus together, achieve more.',
+   openGraph: {
+      title: 'Pomo — Focus Together',
+      description: 'Join focus rooms, track productivity, build streaks.',
+   },
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
@@ -23,7 +29,12 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
          lang="en"
          className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
-         <body className="min-h-full flex flex-col">{children}</body>
+         <body className="min-h-full flex flex-col">
+            <SessionProvider>
+               <Header />
+               {children}
+            </SessionProvider>
+         </body>
       </html>
    )
 }
