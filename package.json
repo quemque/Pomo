@@ -10,6 +10,7 @@
       "postinstall": "prisma generate"
    },
    "dependencies": {
+      "@auth/nextjs": "^0.0.0-380f8d56",
       "@auth/prisma-adapter": "2.7.4",
       "@prisma/client": "5.22.0",
       "neonctl": "^2.46.0",
