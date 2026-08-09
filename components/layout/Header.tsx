@@ -10,7 +10,7 @@ export default function Header() {
    const [mobileOpen, setMobileOpen] = useState(false)
 
    return (
-      <header className="sticky top-0 z-50 border-b border-[#e8ddd0] bg-[#fdf8f3]/90 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-[#e8ddd0] bg-[#F5F0EB]">
          <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
             <Logo />
             <DesktopNav />
