@@ -1,7 +1,8 @@
 'use client'
 
-import { useTimerStore } from '../lib/timer-store'
+import { useTimerStore } from '@/lib/timer-store'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function formatTime(seconds: number) {
    const m = Math.floor(seconds / 60)
@@ -26,7 +27,14 @@ export function FloatingTimer() {
       <Link href="/room" className="fixed bottom-6 right-6 z-50">
          <div className="bg-[#4a3f3a] text-[#fdf8f3] rounded-2xl px-5 py-3 shadow-xl hover:scale-105 transition-transform cursor-pointer">
             <div className="flex items-center gap-3">
-               <span className="text-lg">🍅</span>
+               <div className="relative w-8 h-8 flex-shrink-0">
+                  <Image
+                     src="/favicon.ico"
+                     alt="Pomo"
+                     fill
+                     className="object-contain"
+                  />
+               </div>
                <span className="text-xl font-light tabular-nums">
                   {formatTime(timeLeft)}
                </span>

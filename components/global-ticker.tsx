@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useTimerStore } from '../lib/timer-store'
+import { useTimerStore } from '@/lib/timer-store'
 
 export function GlobalTicker() {
    useEffect(() => {

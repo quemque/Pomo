@@ -1,7 +1,7 @@
 'use client'
 
 import Footer from '@/components/layout/Footer'
-import { useTimerStore } from '../lib/timer-store'
+import { useTimerStore } from '../../lib/timer-store'
 import { useState, useCallback } from 'react'
 
 export default function Room() {
