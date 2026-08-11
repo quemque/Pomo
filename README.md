@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍅 Pomo
 
-## Getting Started
+&gt; Социальный таймер фокуса. Работайте вместе, достигайте большего.
 
-First, run the development server:
+## О проекте
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Pomo** — это веб-приложение для совместной работы по технике Pomodoro. Создавайте комнаты фокуса, присоединяйтесь к другим пользователям и работайте в синхронном ритме.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Ключевые особенности
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Solo-режим** — персональный таймер Pomodoro без регистрации
+- **Комнаты фокуса** — работайте вместе с другими, синхронизация в реальном времени
+- **Плавающий таймер** — не теряйте фокус при навигации по сайту
+- **Статистика** — отслеживайте продуктивность, streaks, достижения
+- **Адаптивный дизайн** — работает на любом устройстве
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Технологический стек
 
-## Learn More
+| Слой             | Технологии                                     |
+| ---------------- | ---------------------------------------------- |
+| **Frontend**     | Next.js 16, React 19, TypeScript, Tailwind CSS |
+| **Состояние**    | Zustand (глобальный store), React Context      |
+| **Auth**         | NextAuth.js v5 (Google OAuth, Credentials)     |
+| **База данных**  | PostgreSQL (Neon), Prisma ORM                  |
+| **Real-time**    | Server-Sent Events (SSE)                       |
+| **Тестирование** | Vitest (в планах)                              |
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Структура проекта
