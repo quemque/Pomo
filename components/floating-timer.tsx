@@ -32,12 +32,18 @@ export function FloatingTimer() {
                      src="/favicon.ico"
                      alt="Pomo"
                      fill
+                     sizes="32px"
                      className="object-contain"
                   />
                </div>
-               <span className="text-xl font-light tabular-nums">
-                  {formatTime(timeLeft)}
-               </span>
+               <div className="flex flex-col">
+                  <span className="text-xl font-light tabular-nums">
+                     {formatTime(timeLeft)}
+                  </span>
+                  <span className="text-[10px] opacity-60 uppercase">
+                     {phase === 'focus' ? 'Focus' : 'Break'}
+                  </span>
+               </div>
                {isRunning ? (
                   <button
                      onClick={(e) => {
@@ -65,7 +71,9 @@ export function FloatingTimer() {
 
             <div className="mt-2 h-1 bg-[#6b5b4f] rounded-full overflow-hidden">
                <div
-                  className="h-full bg-[#b89088] transition-all duration-1000"
+                  className={`h-full transition-all duration-1000 ${
+                     phase === 'focus' ? 'bg-[#b89088]' : 'bg-[#7a9a7a]'
+                  }`}
                   style={{ width: `${progress}%` }}
                />
             </div>

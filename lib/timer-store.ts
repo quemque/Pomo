@@ -1,56 +1,104 @@
 import { create } from 'zustand'
 
+export type Phase = 'idle' | 'focus' | 'break'
+
 interface TimerState {
    timeLeft: number
    totalTime: number
    isRunning: boolean
-   phase: 'idle' | 'focus' | 'break'
-   roomId: string | null
-
-   start: (duration: number, roomId?: string) => void
+   phase: Phase
+   focusDuration: number
+   breakDuration: number
+   start: (seconds: number) => void
+   startBreak: (seconds: number) => void
    pause: () => void
    resume: () => void
    stop: () => void
    tick: () => void
-   setTimeLeft: (t: number) => void
-   setTotalTime: (t: number) => void
-   setPhase: (p: 'idle' | 'focus' | 'break') => void
+   setDurations: (focus: number, breakTime: number) => void
+   setPhase: (phase: Phase) => void
+   setTimeLeft: (seconds: number) => void
 }
 
+let interval: ReturnType<typeof setInterval> | null = null
+
 export const useTimerStore = create<TimerState>((set, get) => ({
-   timeLeft: 25 * 60,
-   totalTime: 25 * 60,
+   timeLeft: 0,
+   totalTime: 0,
    isRunning: false,
    phase: 'idle',
-   roomId: null,
+   focusDuration: 25,
+   breakDuration: 5,
 
-   start: (duration, roomId) =>
+   start: (seconds) => {
       set({
-         timeLeft: duration,
-         totalTime: duration,
+         timeLeft: seconds,
+         totalTime: seconds,
          isRunning: true,
          phase: 'focus',
-         roomId: roomId || null,
-      }),
-
-   pause: () => set({ isRunning: false }),
-   resume: () => set({ isRunning: true }),
-   stop: () =>
-      set({
-         isRunning: false,
-         phase: 'idle',
-         timeLeft: 25 * 60,
-         totalTime: 25 * 60,
-      }),
-
-   tick: () => {
-      const { timeLeft, isRunning } = get()
-      if (isRunning && timeLeft > 0) {
-         set({ timeLeft: timeLeft - 1 })
-      }
+      })
+      if (interval) clearInterval(interval)
+      interval = setInterval(() => get().tick(), 1000)
    },
 
-   setTimeLeft: (t) => set({ timeLeft: t }),
-   setTotalTime: (t) => set({ totalTime: t }),
-   setPhase: (p) => set({ phase: p }),
+   startBreak: (seconds) => {
+      set({
+         timeLeft: seconds,
+         totalTime: seconds,
+         isRunning: true,
+         phase: 'break',
+      })
+      if (interval) clearInterval(interval)
+      interval = setInterval(() => get().tick(), 1000)
+   },
+
+   pause: () => {
+      set({ isRunning: false })
+      if (interval) clearInterval(interval)
+   },
+
+   resume: () => {
+      set({ isRunning: true })
+      if (interval) clearInterval(interval)
+      interval = setInterval(() => get().tick(), 1000)
+   },
+
+   stop: () => {
+      set({ timeLeft: 0, totalTime: 0, isRunning: false, phase: 'idle' })
+      if (interval) clearInterval(interval)
+   },
+
+   tick: () => {
+      const state = get()
+      if (!state.isRunning) return
+
+      if (state.timeLeft <= 1) {
+         if (state.phase === 'focus') {
+            const breakSeconds = state.breakDuration * 60
+            set({
+               timeLeft: breakSeconds,
+               totalTime: breakSeconds,
+               phase: 'break',
+            })
+         } else {
+            set({ timeLeft: 0, totalTime: 0, isRunning: false, phase: 'idle' })
+            if (interval) clearInterval(interval)
+         }
+         return
+      }
+
+      set({ timeLeft: state.timeLeft - 1 })
+   },
+
+   setDurations: (focus, breakTime) => {
+      set({ focusDuration: focus, breakDuration: breakTime })
+   },
+
+   setPhase: (phase) => {
+      set({ phase })
+   },
+
+   setTimeLeft: (seconds) => {
+      set({ timeLeft: seconds })
+   },
 }))
