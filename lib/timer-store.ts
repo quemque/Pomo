@@ -11,6 +11,7 @@ interface TimerState {
    breakDuration: number
    startedAt: Date | null
    roomId: string | null
+   lastSavedAt: number | null
    start: (seconds: number, roomId?: string) => void
    startBreak: (seconds: number) => void
    pause: () => void
@@ -25,21 +26,38 @@ interface TimerState {
 
 let interval: ReturnType<typeof setInterval> | null = null
 
-async function saveSession(state: {
-   roomId: string | null
-   focusDuration: number
-   breakDuration: number
-   startedAt: Date | null
-   totalTime: number
-   timeLeft: number
-}) {
-   if (!state.startedAt) return
+async function saveSession(
+   state: {
+      roomId: string | null
+      focusDuration: number
+      breakDuration: number
+      startedAt: Date | null
+      totalTime: number
+      timeLeft: number
+   },
+   onSaved?: () => void,
+) {
+   console.log('saveSession called', state)
 
-   const actualDuration = state.totalTime - state.timeLeft
-   if (actualDuration < 60) return
+   if (!state.startedAt) {
+      console.log('No startedAt, skipping')
+      return
+   }
+
+   const isCompleted = state.timeLeft <= 1
+   const actualDuration = isCompleted
+      ? state.totalTime
+      : state.totalTime - state.timeLeft
+
+   console.log('actualDuration:', actualDuration, 'isCompleted:', isCompleted)
+
+   if (actualDuration < 30) {
+      console.log('Duration too short, skipping')
+      return
+   }
 
    try {
-      await fetch('/api/sessions', {
+      const res = await fetch('/api/sessions', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
          body: JSON.stringify({
@@ -47,9 +65,17 @@ async function saveSession(state: {
             duration: actualDuration,
             focusTime: state.focusDuration,
             breakTime: state.breakDuration,
+            completed: isCompleted,
             startedAt: state.startedAt.toISOString(),
          }),
       })
+      console.log('API response:', res.status)
+      if (!res.ok) {
+         const text = await res.text()
+         console.error('API error:', text)
+         return
+      }
+      onSaved?.()
    } catch (e) {
       console.error('Failed to save session:', e)
    }
@@ -64,8 +90,10 @@ export const useTimerStore = create<TimerState>((set, get) => ({
    breakDuration: 5,
    startedAt: null,
    roomId: null,
+   lastSavedAt: null,
 
    start: (seconds, roomId) => {
+      console.log('Timer started:', seconds, roomId)
       set({
          timeLeft: seconds,
          totalTime: seconds,
@@ -102,8 +130,14 @@ export const useTimerStore = create<TimerState>((set, get) => ({
 
    stop: () => {
       const state = get()
+      console.log(
+         'Timer stop called, phase:',
+         state.phase,
+         'startedAt:',
+         state.startedAt,
+      )
       if (state.phase === 'focus' && state.startedAt) {
-         saveSession(state)
+         saveSession(state, () => set({ lastSavedAt: Date.now() }))
       }
       set({
          timeLeft: 0,
@@ -122,7 +156,11 @@ export const useTimerStore = create<TimerState>((set, get) => ({
 
       if (state.timeLeft <= 1) {
          if (state.phase === 'focus') {
-            saveSession(state)
+            console.log('Focus ended, saving session')
+            saveSession({ ...state, timeLeft: 0 }, () =>
+               set({ lastSavedAt: Date.now() }),
+            )
+
             const breakSeconds = state.breakDuration * 60
             set({
                timeLeft: breakSeconds,
