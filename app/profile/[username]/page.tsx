@@ -6,7 +6,7 @@ import Link from 'next/link'
 export default async function UserProfilePage({
    params,
 }: {
-   params: { username: string }
+   params: Promise<{ username: string }>
 }) {
    const { username } = await params
 
@@ -22,8 +22,9 @@ export default async function UserProfilePage({
          createdAt: true,
          _count: {
             select: {
+               rooms: true,
                focusSessions: true,
-               ownedRooms: true,
+               participants: true,
             },
          },
       },
@@ -58,15 +59,17 @@ export default async function UserProfilePage({
                   )}
                   <div>
                      <h1 className="text-2xl font-light text-[#4a3f3a]">
-                        {user.name}
+                        {user.name || user.email}
                      </h1>
                      <p className="text-[#8a7e78] text-sm">
-                        Участник с {user.createdAt.toLocaleDateString()}
+                        Участник с{' '}
+                        {user.createdAt?.toLocaleDateString('ru-RU') ||
+                           'недавно'}
                      </p>
                   </div>
                </div>
 
-               <div className="grid grid-cols-2 gap-4">
+               <div className="grid grid-cols-3 gap-4">
                   <div className="bg-[#f5f0eb] rounded-xl p-4 text-center">
                      <div className="text-2xl font-light text-[#4a3f3a]">
                         {user._count.focusSessions}
@@ -75,9 +78,17 @@ export default async function UserProfilePage({
                   </div>
                   <div className="bg-[#f5f0eb] rounded-xl p-4 text-center">
                      <div className="text-2xl font-light text-[#4a3f3a]">
-                        {user._count.ownedRooms}
+                        {user._count.rooms}
                      </div>
-                     <div className="text-xs text-[#8a7e78]">Комнат</div>
+                     <div className="text-xs text-[#8a7e78]">
+                        Создано комнат
+                     </div>
+                  </div>
+                  <div className="bg-[#f5f0eb] rounded-xl p-4 text-center">
+                     <div className="text-2xl font-light text-[#4a3f3a]">
+                        {user._count.participants}
+                     </div>
+                     <div className="text-xs text-[#8a7e78]">Участий</div>
                   </div>
                </div>
             </div>

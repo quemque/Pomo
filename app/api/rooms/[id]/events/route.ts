@@ -3,9 +3,10 @@ import { addConnection, removeConnection } from '@/lib/sse'
 
 export async function GET(
    req: NextRequest,
-   { params }: { params: { id: string } },
+   { params }: { params: Promise<{ id: string }> },
 ) {
-   const roomId = params.id
+   const { id } = await params
+   const roomId = id
 
    const stream = new ReadableStream({
       start(controller) {

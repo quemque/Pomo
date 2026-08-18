@@ -123,12 +123,10 @@ export async function startBreakTimer(
 }
 
 export async function joinRoom(roomId: string, userId: string) {
-   const existing = await prisma.roomParticipant.findUnique({
+   const existing = await prisma.roomParticipant.findFirst({
       where: {
-         userId_roomId: {
-            userId,
-            roomId,
-         },
+         roomId,
+         userId,
       },
    })
 
