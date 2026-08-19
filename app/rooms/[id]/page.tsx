@@ -2,7 +2,7 @@ import { getRoom, joinRoom } from '@/app/actions/room'
 import { auth } from '@/auth'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
-import { RoomTimer } from '@/components/room-timer'
+import { RoomTimer } from './_components/room-timer'
 import { ShareButton } from './share-button'
 
 export default async function RoomPage({
@@ -73,15 +73,13 @@ export default async function RoomPage({
                </div>
             </div>
 
-            {/* Таймер комнаты */}
             <RoomTimer
                roomId={room.id}
                initialPhase={room.currentPhase}
-               initialEndsAt={room.currentPhaseEndsAt}
+               initialEndsAt={room.currentPhaseEndsAt?.toISOString() || null}
                isOwner={isOwner}
             />
 
-            {/* Участники */}
             <div className="bg-white rounded-2xl border border-[#e8e0d8] p-6 mt-6">
                <h2 className="text-lg font-light text-[#4a3f3a] mb-4">
                   Участники ({room.participants.length})
