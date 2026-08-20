@@ -1,6 +1,6 @@
 'use client'
 
-import Footer from '@/components/layout/Footer'
+import Footer from '@/_components/layout/Footer'
 import { TimerCircle } from './components/TimerCircle'
 import { TimerControls } from './components/TimerControls'
 import { TimerSettings } from './components/TimerSettings'

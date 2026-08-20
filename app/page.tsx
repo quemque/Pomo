@@ -1,5 +1,5 @@
-import { BackgroundGlow } from '@/components/landing/BackgroundGlow'
-import TomatoSVG from '@/components/landing/TomatoSVG'
+import { BackgroundGlow } from '@/_components/landing/BackgroundGlow'
+import TomatoSVG from '@/_components/landing/TomatoSVG'
 import Link from 'next/link'
 
 export default function Home() {

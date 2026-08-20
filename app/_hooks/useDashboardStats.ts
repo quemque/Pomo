@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { StatsResponse } from '../types'
+import type { StatsResponse } from '../(dashboard)/dashboard/types'
 
 export function useDashboardStats() {
    const [stats, setStats] = useState<StatsResponse | null>(null)

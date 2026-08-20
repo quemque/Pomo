@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { SessionProvider } from 'next-auth/react'
 import './globals.css'
-import Header from '@/components/layout/Header'
+import Header from '@/_components/layout/Header'
 import { GlobalTicker } from '@/components/global-ticker'
 import { FloatingTimer } from '../components/floating-timer'
 

@@ -1,6 +1,6 @@
 import type { StatCardConfig } from './types'
-import { formatMinutes } from './utils/format'
-import { getWeekMessage, getStreakMessage } from './utils/messages'
+import { formatMinutes } from '../../_lib/format'
+import { getWeekMessage, getStreakMessage } from '../../_lib/messages'
 
 export const HEATMAP_COLORS = [
    '#f0ebe4',

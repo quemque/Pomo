@@ -1,11 +1,11 @@
 'use client'
 
-import Footer from '@/components/layout/Footer'
+import Footer from '@/_components/layout/Footer'
 import { useState } from 'react'
-import { StatsOverview } from './components/StatsOverview'
-import { SessionsChart } from './components/SessionChart'
-import { ActivityHeatmap } from './components/ActivityHeatmap'
-import { useDashboardStats } from './hooks/useDashboardStats'
+import { StatsOverview } from '@/_components/charts/StatsOverview'
+import { SessionsChart } from '@/_components/charts/SessionChart'
+import { ActivityHeatmap } from '@/_components/charts/ActivityHeatmap'
+import { useDashboardStats } from '../../_hooks/useDashboardStats'
 
 export default function DashboardPage() {
    const { stats, loading, refresh } = useDashboardStats()

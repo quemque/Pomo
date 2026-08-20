@@ -1,4 +1,4 @@
-import { calculateIntensity } from './format'
+import { calculateIntensity } from '../../../_lib/format'
 import type { StatsResponse, HeatmapDay } from '../types'
 import { HEATMAP_WEEKS, DAYS_IN_WEEK } from '../constants'
 
